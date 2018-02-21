@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Lecture_2</string>
+    <string name="From">From</string>
+    <string name="To">To</string>
+    <string name="Value">Value</string>
+    <string name="Result">Result</string>
+    <string name="Convert">Convert</string>
+    <string name="EGP">EGP</string>
+    <string name="USD">USD</string>
+    <string-array name="Items">
+        <item>EGP</item>
+        <item>USD</item>
+    </string-array>
+
+</resources>

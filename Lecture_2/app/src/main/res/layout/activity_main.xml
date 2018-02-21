@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    tools:context="com.example.lap.lecture_2.MainActivity">
+
+    <TextView
+        android:id="@+id/lbl_From"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="53dp"
+        android:layout_toStartOf="@+id/lbl_Result"
+        android:text="@string/From" />
+
+    <TextView
+        android:id="@+id/lbl_To"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/lbl_From"
+        android:layout_below="@+id/lbl_From"
+        android:layout_marginTop="46dp"
+        android:text="@string/To" />
+
+    <TextView
+        android:id="@+id/lbl_Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/lbl_To"
+        android:layout_below="@+id/lbl_To"
+        android:layout_marginTop="43dp"
+        android:text="@string/Value" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/lbl_Value"
+        android:layout_below="@+id/lbl_Value"
+        android:layout_marginTop="73dp"
+        android:text="@string/Convert" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/lbl_Value"
+        android:layout_below="@+id/spinner_To"
+        android:layout_toEndOf="@+id/lbl_Result"
+        android:layout_toRightOf="@+id/lbl_Value"
+        android:ems="10"
+        android:hint="Enter a value"
+        android:inputType="numberDecimal"
+        android:textSize="12sp" />
+
+    <Spinner
+
+        android:id="@+id/spinner_From"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/lbl_From"
+        android:layout_alignStart="@+id/editText"
+        android:layout_alignTop="@+id/lbl_From"
+        android:layout_toRightOf="@+id/lbl_From"
+        android:textAlignment="s" />
+
+    <Spinner
+        android:id="@+id/spinner_To"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/lbl_To"
+        android:layout_alignTop="@+id/lbl_To"
+        android:layout_below="@+id/spinner_From"
+        android:layout_toRightOf="@+id/lbl_To"
+        android:layout_alignStart="@+id/spinner_From"
+         />
+
+    <TextView
+        android:id="@+id/lbl_Result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="100dp"
+
+        android:text="@string/Result"
+        android:textSize="30sp" />
+
+</RelativeLayout>
