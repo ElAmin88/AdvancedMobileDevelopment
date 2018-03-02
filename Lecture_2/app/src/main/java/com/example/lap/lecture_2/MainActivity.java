@@ -43,13 +43,19 @@ public class MainActivity extends AppCompatActivity {
                 try{
                     value = Float.parseFloat(v);
                 }catch (Exception e){}
-                if(value==0.0)
-                    Toast.makeText(getBaseContext(),"Enter a valid Value",Toast.LENGTH_LONG).show();
+                if(value==0.0) {
+                    Toast.makeText(getBaseContext(), "Enter a valid Value", Toast.LENGTH_LONG).show();
+                    lbl_result.setText(round(0,2)+"");
+                }
+                else if(value>999999.99) {
+                    Toast.makeText(getBaseContext(), "Enter a Value less than 1 Billion", Toast.LENGTH_LONG).show();
+                    lbl_result.setText(round(0,2)+"");
+                }
                 else{
                     from = (String) spinner_From.getSelectedItem();
                     to = (String) spinner_To.getSelectedItem();
                     result = Convert(value,from,to);
-                    lbl_result.setText(result+"");
+                    lbl_result.setText(round(result,2)+"");
                 }
 
 
@@ -71,5 +77,14 @@ public class MainActivity extends AppCompatActivity {
             result = v;
         }
         return result;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }
