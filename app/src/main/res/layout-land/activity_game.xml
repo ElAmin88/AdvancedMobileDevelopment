@@ -1,99 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parentLayout"
+    android:id="@+id/parntLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.lap.lecture_3.GameActivity">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/coulmn2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:id="@+id/row1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/colorAccent"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
 
         <ImageButton
             android:id="@+id/btn_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
 
         <ImageButton
             android:id="@+id/btn_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
 
         <ImageButton
             android:id="@+id/btn_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/coulmn_1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:id="@+id/row2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/colorPrimary"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
 
         <ImageButton
             android:id="@+id/btn_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
 
         <ImageButton
             android:id="@+id/btn_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
 
         <ImageButton
             android:id="@+id/btn_7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:onClick="btn_clicked"
-            app:srcCompat="@drawable/mark" />
+            android:src="@drawable/mark" />
     </LinearLayout>
 </LinearLayout>
