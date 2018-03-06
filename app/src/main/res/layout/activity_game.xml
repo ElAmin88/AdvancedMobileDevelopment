@@ -95,5 +95,11 @@
             android:layout_margin="10dp"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
+
+        <TextView
+            android:id="@+id/txt_Timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/background_light" />
     </LinearLayout>
 </LinearLayout>

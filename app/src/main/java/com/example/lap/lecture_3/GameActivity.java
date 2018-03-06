@@ -1,18 +1,18 @@
 package com.example.lap.lecture_3;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -22,8 +22,11 @@ public class GameActivity extends AppCompatActivity {
     ImageButton btn_0,btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7;
     Random r;
     String clicked ="";
-    int clickedId = 1000;
+    int clickedId = 1000, time=0;
     LinearLayout layout;
+    TextView txt_timer;
+    Timer timer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,8 @@ public class GameActivity extends AppCompatActivity {
         btn_7 =(ImageButton)findViewById(R.id.btn_7);
 
         layout =(LinearLayout)findViewById(R.id.parentLayout);
-
+        txt_timer =(TextView)findViewById(R.id.txt_Timer);
+        txt_timer.setText(time+"");
         initial_list = new ArrayList<String>();
         current_list = new ArrayList<String>();
         buttons = new ArrayList<ImageButton>();
@@ -138,6 +142,11 @@ public class GameActivity extends AppCompatActivity {
             ((ViewManager)buttons.get(clickedId).getParent()).removeView(buttons.get(clickedId));
             clicked = "";
             clickedId = 1000;
+            if(removed_buttons.size()>=8)
+            {
+                endGame();
+
+            }
         }
         else
         {
@@ -186,6 +195,37 @@ public class GameActivity extends AppCompatActivity {
         buttons.get(id).setImageResource(R.drawable.mark);
     }
 
+    private void startGame()
+    {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                time++;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        txt_timer.setText(time+"");
+                    }
+                });
+            }
+        },0,1000);
+
+
+
+
+    }
+
+    private void endGame()
+    {
+        timer.cancel();
+        Intent i = new Intent(getApplicationContext(),ScoreActivity.class);
+        i.putExtra("score",time+"");
+        startActivity(i);
+
+    }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -197,8 +237,7 @@ public class GameActivity extends AppCompatActivity {
             int x = removed_buttons.get(i);
             ((ViewManager)buttons.get(x).getParent()).removeView(buttons.get(x));
         }
-
-
+        time = savedInstanceState.getInt("time");
         clicked = (String)savedInstanceState.getString("clicked");
         clickedId = (Integer)savedInstanceState.getInt("clickedId");
         setImage(clickedId);
@@ -211,6 +250,13 @@ public class GameActivity extends AppCompatActivity {
         outState.putStringArrayList("current",current_list);
         outState.putString("clicked",clicked);
         outState.putInt("clickedId",clickedId);
+        outState.putInt("time",time);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startGame();
     }
 }
 
