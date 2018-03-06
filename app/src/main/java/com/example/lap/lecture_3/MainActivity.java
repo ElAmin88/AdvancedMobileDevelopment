@@ -24,5 +24,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        btn_score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getBaseContext(),ScoreActivity.class);
+                startActivity(i);
+            }
+        });
+
     }
 }

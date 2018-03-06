@@ -1,6 +1,7 @@
 package com.example.lap.lecture_3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+
 
 public class GameActivity extends AppCompatActivity {
 
@@ -26,7 +31,9 @@ public class GameActivity extends AppCompatActivity {
     LinearLayout layout;
     TextView txt_timer;
     Timer timer;
-
+    public static SharedPreferences loginPreferences;
+    public static SharedPreferences.Editor loginPrefsEditor;
+    Set<String> scores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,7 +213,7 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        txt_timer.setText(time+"");
+                        txt_timer.setText("Time : "+time);
                     }
                 });
             }
@@ -221,7 +228,16 @@ public class GameActivity extends AppCompatActivity {
     {
         timer.cancel();
         Intent i = new Intent(getApplicationContext(),ScoreActivity.class);
-        i.putExtra("score",time+"");
+        loginPreferences = getSharedPreferences("Scores", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+
+        scores = loginPreferences.getStringSet("score",null);
+        if(scores == null)
+            scores = new HashSet<String>();
+        scores.add("Player "+(scores.size()+1)+" : "+time);
+        loginPrefsEditor.putStringSet("score", scores);
+        loginPrefsEditor.apply();
+        loginPrefsEditor.commit();
         startActivity(i);
 
     }
