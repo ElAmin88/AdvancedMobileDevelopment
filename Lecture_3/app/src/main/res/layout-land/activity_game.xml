@@ -21,6 +21,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,6 +31,7 @@
             android:src="@drawable/mark" />
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,6 +41,7 @@
             android:src="@drawable/mark" />
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,6 +51,7 @@
             android:src="@drawable/mark" />
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,6 +71,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,6 +81,7 @@
             android:src="@drawable/mark" />
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,6 +91,7 @@
             android:src="@drawable/mark" />
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,6 +101,7 @@
             android:src="@drawable/mark" />
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/btn_7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

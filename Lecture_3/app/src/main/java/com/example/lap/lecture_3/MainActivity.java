@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
         btn_score = (Button)findViewById(R.id.btn_highScore);
         btn_login = (Button)findViewById(R.id.btn_login);
 
+        if(Player != "")
+            btn_login.setVisibility(View.GONE);
 
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override

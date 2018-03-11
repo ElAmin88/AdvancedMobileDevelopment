@@ -2,6 +2,8 @@ package com.example.lap.lecture_3;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,7 +32,7 @@ public class GameActivity extends AppCompatActivity {
     ImageButton btn_0,btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7;
     Random r;
     String clicked ="";
-    int clickedId = 1000, time=0;
+    int clickedId = 1000, time=0, buttonsClicked =0;
     LinearLayout layout;
     TextView txt_timer;
     Timer timer;
@@ -105,39 +107,45 @@ public class GameActivity extends AppCompatActivity {
 
     public void btn_clicked(View v)
     {
-        switch (v.getId())
+        if(buttonsClicked<2)
         {
-            case (R.id.btn_0):
-                onClick(0);
-                break;
-            case (R.id.btn_1):
-                onClick(1);
-                break;
-            case (R.id.btn_2):
-                onClick(2);
-                break;
-            case (R.id.btn_3):
-                onClick(3);
-                break;
-            case (R.id.btn_4):
-                onClick(4);
-                break;
-            case (R.id.btn_5):
-                onClick(5);
-                break;
-            case (R.id.btn_6):
-                onClick(6);
-                break;
-            case (R.id.btn_7):
-                onClick(7);
-                break;
+            switch (v.getId())
+            {
+                case (R.id.btn_0):
+                    onClick(0);
+                    break;
+                case (R.id.btn_1):
+                    onClick(1);
+                    break;
+                case (R.id.btn_2):
+                    onClick(2);
+                    break;
+                case (R.id.btn_3):
+                    onClick(3);
+                    break;
+                case (R.id.btn_4):
+                    onClick(4);
+                    break;
+                case (R.id.btn_5):
+                    onClick(5);
+                    break;
+                case (R.id.btn_6):
+                    onClick(6);
+                    break;
+                case (R.id.btn_7):
+                    onClick(7);
+                    break;
+            }
         }
+
 
     }
 
     private void onClick( int id)
     {
+        buttonsClicked++;
         setImage(id);
+        final int i = id;
         if(clicked.equals(""))
         {
             clicked = current_list.get(id);
@@ -146,23 +154,47 @@ public class GameActivity extends AppCompatActivity {
         }
         else if(clicked.equals(current_list.get(id)) && clickedId !=id)
         {
-            removed_buttons.add(id);
-            removed_buttons.add(clickedId);
-            ((ViewManager)buttons.get(id).getParent()).removeView(buttons.get(id));
-            ((ViewManager)buttons.get(clickedId).getParent()).removeView(buttons.get(clickedId));
-            clicked = "";
-            clickedId = 1000;
-            if(removed_buttons.size()>=8)
-            {
-                endGame();
+            final MediaPlayer mp = MediaPlayer.create(this, R.raw.correct);
+            mp.start();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    buttons.get(i).setVisibility(View.GONE);
+                    buttons.get(clickedId).setVisibility(View.GONE);
+                    removed_buttons.add(i);
+                    removed_buttons.add(clickedId);
+                    clicked = "";
+                    clickedId = 1000;
+                    buttonsClicked =0;
+                    if(removed_buttons.size()>=8)
+                    {
+                        endGame();
+
+                    }
+                }
+            }, 1000);
+            //((ViewManager)buttons.get(id).getParent()).removeView(buttons.get(id));
+            //((ViewManager)buttons.get(clickedId).getParent()).removeView(buttons.get(clickedId));
 
             }
-        }
         else
         {
-            resetImage(clickedId);
-            clicked = current_list.get(id);
-            clickedId = id;
+            final MediaPlayer mp = MediaPlayer.create(this, R.raw.wrong);
+            mp.start();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    resetImage(clickedId);
+                    resetImage(i);
+                    clicked = current_list.get(i);
+                    clicked = "";
+                    clickedId = 1000;
+                    buttonsClicked =0;
+                }
+            }, 1000);
+
 
 
         }
@@ -268,6 +300,14 @@ public class GameActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         DB.close();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(getBaseContext(),MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }
 

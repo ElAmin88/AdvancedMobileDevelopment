@@ -1,5 +1,6 @@
 package com.example.lap.lecture_3;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,4 +54,13 @@ public class ScoreActivity extends AppCompatActivity {
         super.onDestroy();
         DB.close();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(getBaseContext(),MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
 }
