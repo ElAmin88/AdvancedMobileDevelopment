@@ -10,7 +10,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -31,9 +34,7 @@ public class GameActivity extends AppCompatActivity {
     LinearLayout layout;
     TextView txt_timer;
     Timer timer;
-    public static SharedPreferences loginPreferences;
-    public static SharedPreferences.Editor loginPrefsEditor;
-    Set<String> scores;
+    DatabaseAdapter DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,8 @@ public class GameActivity extends AppCompatActivity {
         buttons = new ArrayList<ImageButton>();
         removed_buttons = new ArrayList<Integer>();
 
+        DB = new DatabaseAdapter(this);
+        DB.open();
         r = new Random();
 
         buttons.add(btn_0);
@@ -157,13 +160,6 @@ public class GameActivity extends AppCompatActivity {
         }
         else
         {
-            /*try{
-                TimeUnit.SECONDS.sleep(5);
-            }catch (Exception e){};
-            resetImage(id);
-            resetImage(clickedId);
-            clicked = "";
-            clickedId = 1000;*/
             resetImage(clickedId);
             clicked = current_list.get(id);
             clickedId = id;
@@ -227,17 +223,10 @@ public class GameActivity extends AppCompatActivity {
     private void endGame()
     {
         timer.cancel();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        DB.insertRow(new Player(MainActivity.Player,time,dateFormat.format(date)));
         Intent i = new Intent(getApplicationContext(),ScoreActivity.class);
-        loginPreferences = getSharedPreferences("Scores", MODE_PRIVATE);
-        loginPrefsEditor = loginPreferences.edit();
-
-        scores = loginPreferences.getStringSet("score",null);
-        if(scores == null)
-            scores = new HashSet<String>();
-        scores.add("Player "+(scores.size()+1)+" : "+time);
-        loginPrefsEditor.putStringSet("score", scores);
-        loginPrefsEditor.apply();
-        loginPrefsEditor.commit();
         startActivity(i);
 
     }
@@ -273,6 +262,12 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         startGame();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DB.close();
     }
 }
 
