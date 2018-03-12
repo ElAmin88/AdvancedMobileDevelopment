@@ -5,6 +5,7 @@
     android:id="@+id/parentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="com.example.lap.lecture_3.GameActivity">
 
     <LinearLayout
@@ -12,7 +13,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/colorAccent"
         android:orientation="vertical">
 
         <TextView
@@ -22,42 +22,42 @@
             android:textColor="@android:color/background_light" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
     </LinearLayout>
@@ -67,7 +67,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/colorPrimary"
         android:orientation="vertical">
 
         <TextView
@@ -76,42 +75,42 @@
             android:layout_height="wrap_content" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
 
         <ImageButton
-            android:background="@android:color/transparent"
             android:id="@+id/btn_7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:background="@android:color/transparent"
             android:onClick="btn_clicked"
             app:srcCompat="@drawable/mark" />
 

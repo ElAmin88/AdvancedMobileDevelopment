@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
                 String name = username.getText().toString();
                 if (name !=""){
                     MainActivity.Player = name;
-                    Intent i = new Intent(getBaseContext(),GameActivity.class);
+                    Intent i = new Intent(getBaseContext(),MainActivity.class);
                     startActivity(i);
                 }
                 else
