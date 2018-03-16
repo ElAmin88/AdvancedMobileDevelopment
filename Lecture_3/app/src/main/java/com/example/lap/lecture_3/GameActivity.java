@@ -160,7 +160,8 @@ public class GameActivity extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    buttons.get(i).setVisibility(View.GONE);
+                    buttons.get(i).setVisibility(View.INVISIBLE);
+                    buttons.get(i).setEnabled(false);
                     buttons.get(clickedId).setVisibility(View.GONE);
                     removed_buttons.add(i);
                     removed_buttons.add(clickedId);
@@ -307,6 +308,12 @@ public class GameActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent i = new Intent(getBaseContext(),MainActivity.class);
         startActivity(i);
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         finish();
     }
 }

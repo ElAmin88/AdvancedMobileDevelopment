@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lecture_4</string>
+    <string name="record">Record</string>
+    <string name="event">Event</string>
+    <string name="day">Day</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+</resources>
