@@ -24,30 +24,50 @@ import static android.media.MediaRecorder.AudioSource.VOICE_RECOGNITION;
 
 public class MainActivity extends AppCompatActivity {
     Button btnRecord;
+    Button btnUpcomingEvents;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnRecord = (Button)findViewById(R.id.btnRecord);
+        initComponents();
 
         PackageManager pm = getPackageManager();
-        List activities = pm.queryIntentActivities(new Intent(
-                RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        List activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         if (activities.size() != 0) {
-            btnRecord.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Record();
-                }
-            });
-        } else {
+            setClickListners();
+        }
+        else {
             btnRecord.setEnabled(false);
             btnRecord.setText("Recognizer not present");
         }
 
 
 
+    }
+
+    private void initComponents()
+    {
+        btnRecord = (Button)findViewById(R.id.btnRecord);
+        btnUpcomingEvents = (Button)findViewById(R.id.btnUpcomingEvents);
+    }
+
+    private  void setClickListners()
+    {
+        btnRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Record();
+            }
+        });
+        btnUpcomingEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getBaseContext(), EventActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
     }
 
     public void Record()
