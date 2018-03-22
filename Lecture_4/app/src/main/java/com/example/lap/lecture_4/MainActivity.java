@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,7 +24,7 @@ import java.util.regex.Pattern;
 import static android.media.MediaRecorder.AudioSource.VOICE_RECOGNITION;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnRecord;
+    ImageButton btnRecord;
     Button btnUpcomingEvents;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             btnRecord.setEnabled(false);
-            btnRecord.setText("Recognizer not present");
         }
 
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initComponents()
     {
-        btnRecord = (Button)findViewById(R.id.btnRecord);
+        btnRecord = (ImageButton)findViewById(R.id.btnRecord);
         btnUpcomingEvents = (Button)findViewById(R.id.btnUpcomingEvents);
     }
 

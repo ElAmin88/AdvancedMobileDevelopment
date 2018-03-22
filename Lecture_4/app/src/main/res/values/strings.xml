@@ -7,5 +7,9 @@
     <string name="time">Time</string>
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
+    <string name="options">Options</string>
+    <string name="help">Help</string>
+    <string name="exit">Exit</string>
     <string name="upcomingEvents">Upcoming Events</string>
+    <string name="click">Click to add an event</string>
 </resources>
