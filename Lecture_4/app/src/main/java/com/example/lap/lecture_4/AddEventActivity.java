@@ -14,6 +14,7 @@ public class AddEventActivity extends AppCompatActivity {
     private EditText editTextevent, editTextdate, editTexttime;
     private String event, dayOfWeek, day, month, year, time;
     private CalendarProvider calendarProvider;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,6 @@ public class AddEventActivity extends AppCompatActivity {
         editTextevent.setText(event);
         editTextdate.setText(dayOfWeek + " " + month + " " + day + ", " + year);
         editTexttime.setText(time);
-
 
     }
 

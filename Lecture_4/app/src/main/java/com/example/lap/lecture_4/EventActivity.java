@@ -13,6 +13,7 @@ import com.example.lap.lecture_4.classes.CalendarProvider;
 import com.example.lap.lecture_4.classes.Event;
 import com.example.lap.lecture_4.classes.EventCustomAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,7 +38,8 @@ public class EventActivity extends AppCompatActivity {
     {
         calendarProvider = new CalendarProvider(this);
         eventListView =(ListView)findViewById(R.id.eventListView);
-        adapter = new EventCustomAdapter ( this, calendarProvider.getAllEvents());
+        ArrayList <Event>events = calendarProvider.getAllEvents();
+        adapter = new EventCustomAdapter ( this,events);
         eventListView.setAdapter(adapter);
         CheckTTS();
     }

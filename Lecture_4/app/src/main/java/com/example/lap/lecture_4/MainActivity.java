@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
         btnOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calendarProvider.deleteAllEvents();
-                Toast.makeText(getBaseContext(), "Calendar cleared",Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getBaseContext(), OptionsActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }

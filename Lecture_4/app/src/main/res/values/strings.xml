@@ -12,4 +12,7 @@
     <string name="exit">Exit</string>
     <string name="upcomingEvents">Upcoming Events</string>
     <string name="click">Click to add an event</string>
+    <string name="deleteAll">Delete all events</string>
+    <string name="addManually">Add Event Manually</string>
+    <string name="delete">Delete</string>
 </resources>

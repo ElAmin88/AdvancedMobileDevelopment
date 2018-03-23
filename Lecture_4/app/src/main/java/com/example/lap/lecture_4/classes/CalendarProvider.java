@@ -128,14 +128,17 @@ public class CalendarProvider {
         {
             if (cursor != null)
             {
+                int deletedIDX = cursor.getColumnIndex(CalendarContract.Events.DELETED);
                 int idIDX = cursor.getColumnIndex(CalendarContract.Events._ID);
                 int titleIDX = cursor.getColumnIndex(CalendarContract.Events.TITLE);
                 int startIDX = cursor.getColumnIndex(CalendarContract.Events.DTSTART);
                 long id = cursor.getLong(idIDX);
                 String title =  cursor.getString(titleIDX);
+                int deletd = cursor.getInt(deletedIDX);
                 String start = cursor.getString(startIDX);
                 String details = "";
                 try {
+
                     long s = Long.parseLong(start);
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(s);
@@ -147,9 +150,11 @@ public class CalendarProvider {
 
 
                 }catch (Exception e){}
-
-                Event e = new Event(title, details, id);
-                events.add(e);
+                if (deletd != 1 )
+                {
+                    Event e = new Event(title, details, id);
+                    events.add(e);
+                }
 
             }
 
