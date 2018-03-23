@@ -3,17 +3,15 @@ package com.example.lap.lecture_4;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.lap.lecture_4.classes.CalendarProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +19,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.media.MediaRecorder.AudioSource.VOICE_RECOGNITION;
-
 public class MainActivity extends AppCompatActivity {
     ImageButton btnRecord;
-    Button btnUpcomingEvents;
+    Button btnUpcomingEvents, btnOptions;
+    CalendarProvider calendarProvider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         PackageManager pm = getPackageManager();
         List activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         if (activities.size() != 0) {
-            setClickListners();
+            setClickListeners();
         }
         else {
             btnRecord.setEnabled(false);
@@ -50,9 +47,11 @@ public class MainActivity extends AppCompatActivity {
     {
         btnRecord = (ImageButton)findViewById(R.id.btnRecord);
         btnUpcomingEvents = (Button)findViewById(R.id.btnUpcomingEvents);
+        btnOptions = (Button)findViewById(R.id.btnOptions);
+        calendarProvider = new CalendarProvider(this);
     }
 
-    private  void setClickListners()
+    private  void setClickListeners()
     {
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(getBaseContext(), EventActivity.class);
                 startActivity(i);
                 finish();
+            }
+        });
+        btnOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calendarProvider.deleteAllEvents();
+                Toast.makeText(getBaseContext(), "Calendar cleared",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -197,10 +203,16 @@ public class MainActivity extends AppCompatActivity {
     @Nullable
     private String getTime(String date)
     {
-        String []res = date.split("at");
+        String []res = date.split(" at ");
         if(res.length > 1 && res[1] != "")
         {
-            return res[1];
+            if(res[1].contains("a.m.") || res[1].contains("p.m."))
+                return res[1];
+            else
+            {
+                Toast.makeText(getBaseContext(),"You didn't specify Time A.M. or P.M.",Toast.LENGTH_LONG).show();
+                return null;
+            }
         }
         Toast.makeText(getBaseContext(),"You didn't specify Time",Toast.LENGTH_LONG).show();
         return null;

@@ -11,6 +11,7 @@
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:orientation="horizontal">
 
         <Button
@@ -18,6 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/darker_gray"
+            android:drawableLeft="@drawable/ic_clear_black_24dp"
             android:text="@string/cancel" />
 
         <Button
@@ -25,6 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/darker_gray"
+            android:drawableLeft="@drawable/ic_done_black_24dp"
             android:text="@string/done" />
     </LinearLayout>
 
@@ -32,6 +37,7 @@
         android:id="@+id/eventLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="20dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -54,6 +60,7 @@
         android:id="@+id/dateLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="20dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -76,6 +83,7 @@
         android:id="@+id/timeLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="20dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
