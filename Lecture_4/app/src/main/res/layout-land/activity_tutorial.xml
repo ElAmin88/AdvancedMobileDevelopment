@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/background_dark"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical|center"
+        android:layout_weight="0.85"
+        android:gravity="center_vertical|center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_tutorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center"
+            android:layout_margin="15dp"
+            android:foregroundGravity="center_vertical|center"
+            android:gravity="center_vertical|center"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/imgView"
+            app:srcCompat="@drawable/calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center"
+            android:layout_margin="15dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/background_dark"
+            android:drawableLeft="@drawable/ic_navigate_back_white_24dp"
+            android:paddingLeft="20dp"
+            android:text="@string/back"
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/background_dark"
+            android:drawableRight="@drawable/ic_navigate_next_white_24dp"
+            android:paddingRight="15dp"
+            android:text="@string/next"
+            android:textAlignment="viewEnd"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

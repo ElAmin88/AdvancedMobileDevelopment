@@ -76,7 +76,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/date"
-            android:inputType="textPersonName" />
+            android:inputType="none" />
+
     </LinearLayout>
 
     <LinearLayout

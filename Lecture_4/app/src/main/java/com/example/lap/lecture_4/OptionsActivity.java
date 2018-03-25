@@ -54,4 +54,12 @@ public class OptionsActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(getBaseContext(), MainActivity.class);
+        startActivity(i);
+        finish();
+    }
 }

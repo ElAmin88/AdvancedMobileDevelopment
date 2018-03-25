@@ -3,6 +3,7 @@ package com.example.lap.lecture_4;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,35 +13,30 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.lap.lecture_4.classes.CalendarProvider;
+import com.example.lap.lecture_4.classes.HelpDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
-    ImageButton btnRecord;
-    Button btnUpcomingEvents, btnOptions;
-    CalendarProvider calendarProvider;
+    private ImageButton btnRecord;
+    private Button btnUpcomingEvents, btnOptions, btnHelp, btnExit;
+    private HelpDialog helpDialog;
+    private final int CHECK_TTS_DATA = 1;
+    private final int CHECK_STT_DATA = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initComponents();
-
-        PackageManager pm = getPackageManager();
-        List activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
-        if (activities.size() != 0) {
-            setClickListeners();
-        }
-        else {
-            btnRecord.setEnabled(false);
-        }
-
-
-
+        checkTTS();
+        checkSTT();
     }
 
     private void initComponents()
@@ -48,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
         btnRecord = (ImageButton)findViewById(R.id.btnRecord);
         btnUpcomingEvents = (Button)findViewById(R.id.btnUpcomingEvents);
         btnOptions = (Button)findViewById(R.id.btnOptions);
-        calendarProvider = new CalendarProvider(this);
+        btnHelp = (Button)findViewById(R.id.btnHelp);
+        btnExit = (Button)findViewById(R.id.btnExit);
+        helpDialog = new HelpDialog(this);
     }
 
     private  void setClickListeners()
@@ -75,6 +73,21 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        btnHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog.show();
+            }
+        });
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                System.exit(0);
+            }
+        });
     }
 
     public void Record()
@@ -94,12 +107,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String pattern ="(Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday)";
-        String event = null, day = null, month = null, year = null, dayOfWeek = null, time = null;
-        if (requestCode == 0) {
+
+        if (requestCode == CHECK_TTS_DATA) {
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+
+                List<String> available = data.getStringArrayListExtra(TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES);
+                List<String> unavailable = data.getStringArrayListExtra(TextToSpeech.Engine.EXTRA_UNAVAILABLE_VOICES);
+            }
+            else {
+                String action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA;
+                Intent install = new Intent();
+                install.setAction(action);
+                startActivity(install);
+            }
+        }
+
+        else if (requestCode == CHECK_STT_DATA) {
+            String pattern ="(Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday)";
+            String event = null, day = null, month = null, year = null, dayOfWeek = null, time = null;
             if (resultCode == -1) {
                 ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                float[] confidence = data.getFloatArrayExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES);
                 dayOfWeek = getDayofWeek(results.get(0));
                 String [] res = results.get(0).split(pattern);
                 if(dayOfWeek !=null && res.length > 1 ){
@@ -217,5 +244,31 @@ public class MainActivity extends AppCompatActivity {
         }
         Toast.makeText(getBaseContext(),"You didn't specify Time",Toast.LENGTH_LONG).show();
         return null;
+    }
+
+    private void checkTTS()
+    {
+        Intent intent = new Intent(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(intent, CHECK_TTS_DATA);
+    }
+
+    private void checkSTT()
+    {
+        Intent intent = new
+                Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak!");
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                Locale.ENGLISH);
+        startActivityForResult(intent, CHECK_STT_DATA);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        System.exit(0);
     }
 }

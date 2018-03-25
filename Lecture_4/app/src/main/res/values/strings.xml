@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lecture_4</string>
+    <string name="app_name">Voice Calendar</string>
     <string name="record">Record</string>
     <string name="event">Event</string>
     <string name="day">Day</string>
@@ -15,4 +15,9 @@
     <string name="deleteAll">Delete all events</string>
     <string name="addManually">Add Event Manually</string>
     <string name="delete">Delete</string>
+    <string name="appVersion">Voice Calendar V 1.0</string>
+    <string name="contact">Contact us: a.elamin95@gmail.com</string>
+    <string name="HowToUse">How to use</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
 </resources>

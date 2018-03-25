@@ -23,7 +23,8 @@
         </activity>
         <activity android:name=".AddEventActivity" />
         <activity android:name=".EventActivity" />
-        <activity android:name=".OptionsActivity"></activity>
+        <activity android:name=".OptionsActivity" />
+        <activity android:name=".TutorialActivity"></activity>
     </application>
 
 </manifest>

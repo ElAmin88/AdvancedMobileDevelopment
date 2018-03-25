@@ -16,14 +16,18 @@ import com.example.lap.lecture_4.classes.EventCustomAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class EventActivity extends AppCompatActivity {
-    Cursor cursor;
-    CalendarProvider calendarProvider;
-    ListView eventListView;
-    final int CHECK_TTS_DATA = 1;
+    private CalendarProvider calendarProvider;
+    private ListView eventListView;
     private  TextToSpeech tts;
-    EventCustomAdapter adapter;
+    private EventCustomAdapter adapter;
+    private long clickedItemID;
+    private Timer timer;
+    private ArrayList <Event>events;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +42,16 @@ public class EventActivity extends AppCompatActivity {
     {
         calendarProvider = new CalendarProvider(this);
         eventListView =(ListView)findViewById(R.id.eventListView);
-        ArrayList <Event>events = calendarProvider.getAllEvents();
+        events = calendarProvider.getAllEvents();
         adapter = new EventCustomAdapter ( this,events);
         eventListView.setAdapter(adapter);
-        CheckTTS();
+        clickedItemID = -1;
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                tts.setLanguage(Locale.US);
+            }
+        });
     }
 
     public void setClickListeners()
@@ -50,48 +60,41 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Event e = (Event) eventListView.getItemAtPosition(i);
-                speakEvent(e.toString());
-            }
-        });
-    }
-
-
-    private void CheckTTS()
-    {
-        Intent intent = new Intent(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        startActivityForResult(intent, CHECK_TTS_DATA);
-    }
-
-    private void speakEvent(final String event)
-    {
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int i) {
-                if (i == TextToSpeech.SUCCESS) {
-                    String msg = event;
-                    tts.speak(msg, TextToSpeech.QUEUE_ADD, null);
+                tts.stop();
+                if(clickedItemID == e.getEventId())
+                {
+                    calendarProvider.deleteEventById(e.getEventId());
+                    events.remove(e);
+                    clickedItemID = -1;
+                    adapter.notifyDataSetChanged();
+                    tts.stop();
+                }
+                else {
+                    tts.speak(e.toString(), TextToSpeech.QUEUE_ADD, null);
+                    clickedItemID = e.getEventId();
+                    startTimer();
                 }
             }
         });
-        tts.setLanguage(Locale.US);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHECK_TTS_DATA) {
-            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
 
-                List<String> available = data.getStringArrayListExtra(TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES);
-                List<String> unavailable = data.getStringArrayListExtra(TextToSpeech.Engine.EXTRA_UNAVAILABLE_VOICES);
+
+
+    private void startTimer()
+    {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            int i = 0;
+            @Override
+            public void run() {
+                i+=100;
+                if(i%1000 == 0){
+                    clickedItemID = -1;
+                    timer.cancel();
+                }
             }
-            else {
-                String action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA;
-                Intent install = new Intent();
-                install.setAction(action);
-                startActivity(install);
-            }
-        }
+        },0,100);
     }
 
 
