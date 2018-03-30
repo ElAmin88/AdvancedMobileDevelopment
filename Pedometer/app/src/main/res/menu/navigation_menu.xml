@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="New Run"
+        android:id="@+id/nav_newrun"/>
     <item android:title="Profile"
         android:id="@+id/nav_profile"/>
     <item android:title="Settings"
         android:id="@+id/nav_settings"/>
     <item android:title="History"
         android:id="@+id/nav_history"/>
+    <item android:title="Help"
+        android:id="@+id/nav_help"/>
     <item android:title="Logout"
         android:id="@+id/nav_logout"/>
+    <item android:title="Exit"
+        android:id="@+id/nav_exit"/>
+
 </menu>

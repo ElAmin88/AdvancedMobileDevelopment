@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.widget.TextView;
 
 import com.example.lap.pedometer.R;
+import com.github.lzyzsd.circleprogress.DonutProgress;
 
 /**
  * Created by lap on 3/30/2018.
@@ -18,17 +19,21 @@ public class StepDetector {
     private Sensor sensor;
     private int sensorStatus, numSteps;
     private Context ctx;
+    private DonutProgress donutProgress;
 
-    public StepDetector(Context context)
+    public StepDetector(Context context, DonutProgress d)
     {
         ctx = context;
         sensorManager = (SensorManager)ctx.getSystemService(ctx.SENSOR_SERVICE);
         sensorStatus = checkSensors();
         sensor = sensorManager.getDefaultSensor(sensorStatus);
         numSteps = 0;
+        donutProgress = d;
+        donutProgress.setSuffixText("");
+        donutProgress.setMax(1000);
     }
 
-    private void registerSensor(final int sensorStatus)
+    public void registerSensor()
     {
 
         sensorManager.registerListener(new SensorEventListener() {
@@ -38,7 +43,22 @@ public class StepDetector {
                 if(sensorStatus == Sensor.TYPE_STEP_DETECTOR) {
                     values = sensorEvent.values;
                     if(values[0] == 1.0)
+                    {
                         numSteps++;
+                        if(numSteps >= 1000)
+                        {
+                            donutProgress.setSuffixText(" K");
+                            donutProgress.setProgress(numSteps/1000);
+                        }
+                        else if(numSteps >= 1000000)
+                        {
+                            donutProgress.setSuffixText(" M");
+                            donutProgress.setProgress(numSteps/1000000);
+                        }
+                        else {
+                            donutProgress.setProgress(numSteps);
+                        }
+                    }
                 }
             }
 
@@ -59,5 +79,13 @@ public class StepDetector {
         if (sensor != null)
             return Sensor.TYPE_ACCELEROMETER;
         return 0;
+    }
+
+    public int getNumSteps() {
+        return numSteps;
+    }
+
+    public void setNumSteps(int numSteps) {
+        this.numSteps = numSteps;
     }
 }

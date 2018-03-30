@@ -1,5 +1,6 @@
 package com.example.lap.pedometer.classes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.example.lap.pedometer.R;
+import com.example.lap.pedometer.ui.MainActivity;
 
 /**
  * Created by lap on 3/30/2018.
@@ -99,7 +101,8 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                 // handle it
                 break;
             case R.id.nav_profile:
-                // do whatever
+                startActivity(new Intent(getBaseContext(), MainActivity.class));
+                finish();
                 break;
         }
         DrawerLayout.closeDrawer(GravityCompat.START);

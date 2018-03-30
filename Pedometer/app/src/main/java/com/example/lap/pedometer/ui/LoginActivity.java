@@ -2,10 +2,11 @@ package com.example.lap.pedometer.ui;
 
 
 import android.os.Bundle;
-import com.example.lap.pedometer.R;
-import com.example.lap.pedometer.classes.BaseActivity;
+import android.support.v7.app.AppCompatActivity;
 
-public class LoginActivity extends BaseActivity {
+import com.example.lap.pedometer.R;
+
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
