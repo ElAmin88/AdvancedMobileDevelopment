@@ -3,4 +3,17 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="progress">Progress</string>
+    <string name="calories">Calories</string>
+    <string name="steps">Steps</string>
+    <string name="distance">Distance</string>
+    <string name="speed">Avg. Speed</string>
+    <string name="name">Username</string>
+    <string name="password">Password</string>
+    <string name="createAccount">Create Account</string>
+    <string name="login">Login</string>
+    <string name="newUser">No account yet? Create one</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
+    <string name="stepLength">Step Length</string>
+    <string name="confirm">Confirm</string>
 </resources>

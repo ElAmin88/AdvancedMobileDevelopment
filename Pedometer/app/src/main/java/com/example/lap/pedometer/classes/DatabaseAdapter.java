@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lap on 3/30/2018.
@@ -22,7 +23,7 @@ public class DatabaseAdapter {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "Pedometer";
+    private static final String DATABASE_NAME = "PedometerDatabase";
 
     // Table Names
     private static final String TABLE_USERS = "users";
@@ -37,6 +38,7 @@ public class DatabaseAdapter {
     private static final String KEY_USER_PASSWORD = "password";
     private static final String KEY_USER_WEIGHT = "weight";
     private static final String KEY_USER_STEP_LENGTH = "step_length";
+    private static final String KEY_USER_HEIGHT = "height";
 
     public static final String[] USER_KEYS = new String[] {KEY_ID, KEY_USER_NAME, KEY_USER_PASSWORD, KEY_USER_STEP_LENGTH, KEY_USER_WEIGHT};
 
@@ -61,7 +63,8 @@ public class DatabaseAdapter {
                     + KEY_USER_NAME         + " text not null, "
                     + KEY_USER_PASSWORD     + " text not null, "
                     + KEY_USER_WEIGHT       + " real not null, "
-                    + KEY_USER_STEP_LENGTH  + " real not null, "
+                    + KEY_USER_HEIGHT       + " real not null, "
+                    + KEY_USER_STEP_LENGTH  + " real not null "
                     + ");";
 
     //RUNRECORDS Table Create Statement
@@ -74,7 +77,7 @@ public class DatabaseAdapter {
                     + KEY_RUNRECORDS_DISTANCE       + " real not null, "
                     + KEY_RUNRECORDS_TIME           + " text not null, "
                     + KEY_RUNRECORDS_SPEED          + " real not null, "
-                    + KEY_RUNRECORDS_DURATION       + " real not null, "
+                    + KEY_RUNRECORDS_DURATION       + " real not null "
                     + ");";
 
     // Context of application who uses us.
@@ -107,6 +110,7 @@ public class DatabaseAdapter {
         initialValues.put(KEY_USER_PASSWORD, user.getPassword());
         initialValues.put(KEY_USER_WEIGHT, user.getWeight());
         initialValues.put(KEY_USER_STEP_LENGTH, user.getStepLegth());
+        initialValues.put(KEY_USER_HEIGHT, user.getHeight());
 
         // Insert it into the database.
         return db.insert(TABLE_USERS, null, initialValues);
@@ -122,14 +126,15 @@ public class DatabaseAdapter {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null)
+        if (c != null && c.getCount() != 0)
         {
             c.moveToFirst();
 
             String name = c.getString(c.getColumnIndex(KEY_USER_NAME));
             String password = c.getString(c.getColumnIndex(KEY_USER_PASSWORD));
-            float weight = c.getFloat(c.getColumnIndex(KEY_USER_PASSWORD));
-            float step_length = c.getFloat(c.getColumnIndex(KEY_USER_PASSWORD));
+            float weight = c.getFloat(c.getColumnIndex(KEY_USER_WEIGHT));
+            float height = c.getFloat(c.getColumnIndex(KEY_USER_HEIGHT));
+            float step_length = c.getFloat(c.getColumnIndex(KEY_USER_STEP_LENGTH));
 
             user = new User();
             user.setId(id);
@@ -137,9 +142,67 @@ public class DatabaseAdapter {
             user.setPassword(password);
             user.setStepLegth(step_length);
             user.setWeight(weight);
+            user.setHeight(height);
         }
 
         return user;
+    }
+
+    //Getting User by Name
+    public User getUserByName(String name) {
+        User user = null;
+        String selectQuery = "SELECT  * FROM " + TABLE_USERS + " WHERE "
+                + KEY_USER_NAME + " = '" + name + "'";
+
+        Log.e(TAG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() != 0)
+        {
+            c.moveToFirst();
+
+            int id = c.getInt(c.getColumnIndex(KEY_ID));
+            String password = c.getString(c.getColumnIndex(KEY_USER_PASSWORD));
+            float weight = c.getFloat(c.getColumnIndex(KEY_USER_WEIGHT));
+            float height = c.getFloat(c.getColumnIndex(KEY_USER_HEIGHT));
+            float step_length = c.getFloat(c.getColumnIndex(KEY_USER_STEP_LENGTH));
+
+            user = new User();
+            user.setId(id);
+            user.setName(name);
+            user.setPassword(password);
+            user.setStepLegth(step_length);
+            user.setWeight(weight);
+            user.setHeight(height);
+        }
+
+        return user;
+    }
+
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> users = new ArrayList<User>();
+        String selectQuery = "SELECT  * FROM " + TABLE_USERS;
+
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                User u = new User();
+                u.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                u.setName(c.getString(c.getColumnIndex(KEY_USER_NAME)));
+                u.setPassword(c.getString(c.getColumnIndex(KEY_USER_PASSWORD)));
+                u.setHeight(c.getFloat(c.getColumnIndex(KEY_USER_HEIGHT)));
+                u.setWeight(c.getFloat(c.getColumnIndex(KEY_USER_WEIGHT)));
+                u.setStepLegth(c.getFloat(c.getColumnIndex(KEY_USER_STEP_LENGTH)));
+
+                // adding to tags list
+                users.add(u);
+            } while (c.moveToNext());
+        }
+        return users;
     }
 
     //Getting RunRecord of a User by Id
@@ -178,6 +241,18 @@ public class DatabaseAdapter {
             }
         }
         return records;
+    }
+
+    //updating user's weight, height and step Length
+    public int updateUserInformation(User currentUser, float weight, float height, float stepLength) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_USER_WEIGHT, weight);
+        values.put(KEY_USER_HEIGHT, currentUser.getWeight());
+        values.put(KEY_USER_WEIGHT, currentUser.getWeight());
+        // updating row
+        return db.update(TABLE_USERS, values, KEY_ID + " = ?",
+                new String[] { String.valueOf(currentUser.getId()) });
     }
 
     //Deleting User by ID

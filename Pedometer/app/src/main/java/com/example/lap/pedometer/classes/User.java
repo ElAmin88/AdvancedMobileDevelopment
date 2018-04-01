@@ -7,15 +7,16 @@ package com.example.lap.pedometer.classes;
 public class User {
     private int id;
     private String name, password;
-    private float weight, stepLegth;
+    private float weight, stepLegth, height;
 
     public User()
     {
         this.id = 0;
         this.name = "";
         this.password = "";
-        this.weight = 0;
-        this.stepLegth = 0;
+        this.weight = 1;
+        this.stepLegth = 1;
+        this.height = 1;
     }
 
     public String getPassword() {
@@ -56,5 +57,13 @@ public class User {
 
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 }

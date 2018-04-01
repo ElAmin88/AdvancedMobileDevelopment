@@ -14,9 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.lap.pedometer.R;
+import com.example.lap.pedometer.ui.HistoryActivity;
 import com.example.lap.pedometer.ui.MainActivity;
+import com.example.lap.pedometer.ui.SettingsActivity;
+import com.example.lap.pedometer.ui.SplashActivity;
 
 /**
  * Created by lap on 3/30/2018.
@@ -29,6 +33,7 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     private DrawerLayout DrawerLayout;
     private ActionBarDrawerToggle DrawerToggle;
     private Menu drawerMenu;
+    private User currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +46,7 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         DrawerLayout.addDrawerListener(DrawerToggle);
         DrawerToggle.syncState();
 
+        currentUser = SplashActivity.getCurrentUser();
         drawerMenu = navigation_view.getMenu();
         for(int i = 0; i < drawerMenu.size(); i++) {
             drawerMenu.getItem(i).setOnMenuItemClickListener(this);
@@ -90,22 +96,36 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.nav_settings:
-                // handle it
-                break;
-            case R.id.nav_history:
-                // do whatever
-                break;
-            case R.id.nav_logout:
-                // handle it
-                break;
-            case R.id.nav_profile:
-                startActivity(new Intent(getBaseContext(), MainActivity.class));
-                finish();
-                break;
+        if (currentUser.getWeight()!=0 && currentUser.getHeight() !=0 && currentUser.getStepLegth() !=0)
+        {
+            switch (menuItem.getItemId()) {
+                case R.id.nav_newrun:
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                    break;
+                case R.id.nav_settings:
+                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                    finish();
+                    break;
+                case R.id.nav_history:
+                    startActivity(new Intent(getApplicationContext(), HistoryActivity.class));
+                    finish();
+                    break;
+                case R.id.nav_logout:
+                    // handle it
+                    break;
+                case R.id.nav_profile:
+                    startActivity(new Intent(getBaseContext(), MainActivity.class));
+                    finish();
+                    break;
+            }
+            DrawerLayout.closeDrawer(GravityCompat.START);
         }
-        DrawerLayout.closeDrawer(GravityCompat.START);
+
+        else {
+            Toast.makeText(getApplicationContext(),"Please Enter your Information",Toast.LENGTH_LONG).show();
+        }
+
         return false;
     }
 }
