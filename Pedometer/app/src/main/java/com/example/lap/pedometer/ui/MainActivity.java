@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.lap.pedometer.R;
@@ -18,6 +19,7 @@ import com.example.lap.pedometer.classes.StepDetector;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
@@ -27,52 +29,65 @@ import java.util.TimerTask;
 public class MainActivity extends BaseActivity {
     private ArcProgress stepsProgress, caloriesProgress, distanceProgress, speedProgress;
     private StepDetector stepDetector;
-    TextView txtDuration;
+    private TextView txtDuration;
+    private ImageButton btn_start, btn_stop;
     private int numSteps = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initComponents();
+        setClickListeners();
 
+
+
+    }
+
+    private void initComponents()
+    {
         stepsProgress = (ArcProgress) findViewById(R.id.steps_progress);
+        stepsProgress.setMax(1000);
+        stepsProgress.setSuffixText("");
+
         caloriesProgress =(ArcProgress)findViewById(R.id.calories_progress);
+        caloriesProgress.setMax(1000);
+        caloriesProgress.setSuffixText("");
+
         distanceProgress = (ArcProgress)findViewById(R.id.distance_progress);
+        distanceProgress.setMax(1000);
+        distanceProgress.setSuffixText("M");
+
         speedProgress = (ArcProgress)findViewById(R.id.speed_progress);
+        speedProgress.setMax(100);
+        speedProgress.setSuffixText(" M/Min.");
+
+        btn_start = (ImageButton)findViewById(R.id.btn_start);
+        btn_stop = (ImageButton)findViewById(R.id.btn_stop);
+
         txtDuration = (TextView)findViewById(R.id.txtDuration);
         stepDetector = new StepDetector(this, stepsProgress, caloriesProgress, distanceProgress, speedProgress, txtDuration);
-        stepDetector.registerSensor();
-
 
 
     }
 
-    private void takeScreenshot()
+    private void setClickListeners()
     {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+        btn_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stepDetector.registerSensor();
+            }
+        });
 
-        try {
-            // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+        btn_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stepDetector.unregisterSensor();
+            }
+        });
 
-            // create bitmap screen capture
-            View v1 = getWindow().getDecorView().getRootView();
-            v1.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-            v1.setDrawingCacheEnabled(false);
-
-            File imageFile = new File(mPath);
-
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            int quality = 100;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-        } catch (Throwable e) {
-            // Several error may come out with file handling or DOM
-            e.printStackTrace();
-        }
     }
+
+
 }

@@ -5,8 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.example.lap.pedometer.R;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +25,7 @@ public class DatabaseAdapter {
     private static final String TAG = "DatabaseHelper";
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "PedometerDatabase";
@@ -39,6 +44,8 @@ public class DatabaseAdapter {
     private static final String KEY_USER_WEIGHT = "weight";
     private static final String KEY_USER_STEP_LENGTH = "step_length";
     private static final String KEY_USER_HEIGHT = "height";
+    private static final String KEY_USER_PICTURE = "picture";
+
 
     public static final String[] USER_KEYS = new String[] {KEY_ID, KEY_USER_NAME, KEY_USER_PASSWORD, KEY_USER_STEP_LENGTH, KEY_USER_WEIGHT};
 
@@ -64,7 +71,8 @@ public class DatabaseAdapter {
                     + KEY_USER_PASSWORD     + " text not null, "
                     + KEY_USER_WEIGHT       + " real not null, "
                     + KEY_USER_HEIGHT       + " real not null, "
-                    + KEY_USER_STEP_LENGTH  + " real not null "
+                    + KEY_USER_STEP_LENGTH  + " real not null, "
+                    + KEY_USER_PICTURE + " blob  "
                     + ");";
 
     //RUNRECORDS Table Create Statement
@@ -112,6 +120,10 @@ public class DatabaseAdapter {
         initialValues.put(KEY_USER_STEP_LENGTH, user.getStepLegth());
         initialValues.put(KEY_USER_HEIGHT, user.getHeight());
 
+        byte [] p = setDefaultPicture();
+
+        initialValues.put(KEY_USER_PICTURE, setDefaultPicture());
+
         // Insert it into the database.
         return db.insert(TABLE_USERS, null, initialValues);
     }
@@ -135,6 +147,7 @@ public class DatabaseAdapter {
             float weight = c.getFloat(c.getColumnIndex(KEY_USER_WEIGHT));
             float height = c.getFloat(c.getColumnIndex(KEY_USER_HEIGHT));
             float step_length = c.getFloat(c.getColumnIndex(KEY_USER_STEP_LENGTH));
+            byte [] picture = c.getBlob(c.getColumnIndex(KEY_USER_PICTURE));
 
             user = new User();
             user.setId(id);
@@ -143,6 +156,7 @@ public class DatabaseAdapter {
             user.setStepLegth(step_length);
             user.setWeight(weight);
             user.setHeight(height);
+            user.setPicture(picture);
         }
 
         return user;
@@ -167,6 +181,7 @@ public class DatabaseAdapter {
             float weight = c.getFloat(c.getColumnIndex(KEY_USER_WEIGHT));
             float height = c.getFloat(c.getColumnIndex(KEY_USER_HEIGHT));
             float step_length = c.getFloat(c.getColumnIndex(KEY_USER_STEP_LENGTH));
+            byte [] picture = c.getBlob(c.getColumnIndex(KEY_USER_PICTURE));
 
             user = new User();
             user.setId(id);
@@ -175,6 +190,7 @@ public class DatabaseAdapter {
             user.setStepLegth(step_length);
             user.setWeight(weight);
             user.setHeight(height);
+            user.setPicture(picture);
         }
 
         return user;
@@ -197,8 +213,8 @@ public class DatabaseAdapter {
                 u.setHeight(c.getFloat(c.getColumnIndex(KEY_USER_HEIGHT)));
                 u.setWeight(c.getFloat(c.getColumnIndex(KEY_USER_WEIGHT)));
                 u.setStepLegth(c.getFloat(c.getColumnIndex(KEY_USER_STEP_LENGTH)));
+                u.setPicture(c.getBlob(c.getColumnIndex(KEY_USER_PICTURE)));
 
-                // adding to tags list
                 users.add(u);
             } while (c.moveToNext());
         }
@@ -244,15 +260,27 @@ public class DatabaseAdapter {
     }
 
     //updating user's weight, height and step Length
-    public int updateUserInformation(User currentUser, float weight, float height, float stepLength) {
+    public int updateUserInformation(User currentUser, float weight, float height, float stepLength ,byte [] picture) {
 
         ContentValues values = new ContentValues();
         values.put(KEY_USER_WEIGHT, weight);
         values.put(KEY_USER_HEIGHT, currentUser.getWeight());
-        values.put(KEY_USER_WEIGHT, currentUser.getWeight());
+        values.put(KEY_USER_STEP_LENGTH, currentUser.getStepLegth());
+        if (picture == null)
+            values.put(KEY_USER_PICTURE, setDefaultPicture());
+        else
+            values.put(KEY_USER_PICTURE, picture);
         // updating row
         return db.update(TABLE_USERS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(currentUser.getId()) });
+    }
+
+    public byte[] setDefaultPicture()
+    {
+        Bitmap picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.app_icon);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        picture.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        return stream.toByteArray();
     }
 
     //Deleting User by ID
@@ -280,6 +308,8 @@ public class DatabaseAdapter {
         initialValues.put(KEY_RUNRECORDS_DISTANCE, record.getDistance());
         initialValues.put(KEY_RUNRECORDS_TIME, record.getTime());
         initialValues.put(KEY_RUNRECORDS_USERID, record.getUserId());
+        initialValues.put(KEY_RUNRECORDS_DURATION, record.getDuration());
+
 
         // Insert it into the database.
         return db.insert(TABLE_USERS, null, initialValues);
@@ -290,6 +320,7 @@ public class DatabaseAdapter {
         db.delete(TABLE_RUNRECORDS, KEY_ID + " = ?",
                 new String[] { String.valueOf(id) });
     }
+
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
@@ -308,11 +339,15 @@ public class DatabaseAdapter {
                     + " to " + newVersion + ", which will destroy all old data!");
 
             // Destroy old database:
-            _db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-            _db.execSQL("DROP TABLE IF EXISTS " + TABLE_RUNRECORDS);
+            if (newVersion > oldVersion)
+            {
+                _db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+                _db.execSQL("DROP TABLE IF EXISTS " + TABLE_RUNRECORDS);
 
-            // Recreate new database:
-            onCreate(_db);
+                // Recreate new database:
+                onCreate(_db);
+            }
+
         }
     }
 }

@@ -16,4 +16,8 @@
     <string name="height">Height</string>
     <string name="stepLength">Step Length</string>
     <string name="confirm">Confirm</string>
+    <string name="totalRuns">Runs :</string>
+    <string name="totalCalories">Calories burned : </string>
+    <string name="choosePicture">Choose Picture</string>
+    <string name="defaultPicture">Default</string>
 </resources>

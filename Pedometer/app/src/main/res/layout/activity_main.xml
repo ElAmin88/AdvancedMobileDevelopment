@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     android:orientation="vertical"
     tools:context="com.example.lap.pedometer.ui.MainActivity">
 
@@ -22,7 +21,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             custom:arc_bottom_text="Steps"
-            custom:circle_progress="20" />
+            custom:arc_bottom_text_size="18sp"
+            custom:circle_progress="0" />
 
         <TextView
             android:id="@+id/textView"
@@ -39,7 +39,8 @@
             custom:arc_bottom_text="@string/calories"
             custom:arc_finished_color="@color/red"
             custom:arc_max="1000"
-            custom:arc_progress="20"
+            custom:arc_progress="0"
+            custom:arc_bottom_text_size="18sp"
             custom:arc_unfinished_color="@color/colorAccent" />
     </LinearLayout>
 
@@ -55,14 +56,16 @@
         <TextView
             android:id="@+id/txtDuration"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical|center"
-            android:layout_weight="1"
-            android:fontFamily="casual"
+            android:layout_height="wrap_content"
+            android:ellipsize="none"
+            android:fontFamily="sans-serif-thin"
             android:gravity="center_vertical|center_horizontal"
-            android:text="TextView"
-            android:textColor="@color/red"
-            android:textSize="24sp" />
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:text="0:00,00"
+            android:textColor="@color/colorAccent"
+            android:textSize="80sp"  />
+
     </LinearLayout>
 
     <LinearLayout
@@ -79,7 +82,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             custom:arc_bottom_text="@string/distance"
-            custom:circle_progress="20" />
+            custom:circle_progress="0"
+            custom:arc_bottom_text_size="18sp"
+            />
 
         <TextView
             android:id="@+id/textView2"
@@ -95,8 +100,9 @@
             custom:arc_bottom_text="@string/speed"
             custom:arc_finished_color="@color/red"
             custom:arc_max="1000"
-            custom:arc_progress="20"
-            custom:arc_unfinished_color="@color/colorAccent" />
+            custom:arc_progress="0"
+            custom:arc_unfinished_color="@color/colorAccent"
+            custom:arc_bottom_text_size="18sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -107,7 +113,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/btnPlay"
+            android:id="@+id/btn_start"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -121,6 +127,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             custom:srcCompat="@drawable/ic_stop_black_24dp" />
+
     </LinearLayout>
 
 </LinearLayout>

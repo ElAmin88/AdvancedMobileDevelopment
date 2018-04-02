@@ -27,6 +27,8 @@ public class StepDetector {
     private ArcProgress stepProgress, caloriesProgress, distanceProgress, speedProgress;
     private TextView txtDuration;
     private Timer timer;
+    private boolean pause;
+    private SensorEventListener sensorEventListener;
 
     public StepDetector(Context context, ArcProgress stepProgress, ArcProgress caloriesProgress, ArcProgress distanceProgress,
                         ArcProgress speedProgress, TextView txtDuration)
@@ -48,14 +50,9 @@ public class StepDetector {
         this.speedProgress = speedProgress;
         this.txtDuration = txtDuration;
 
-        stepProgress.setSuffixText("");
-        stepProgress.setMax(1000);
-    }
+        pause = false;
 
-    public void registerSensor()
-    {
-        startTimer();
-        sensorManager.registerListener(new SensorEventListener() {
+        sensorEventListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
@@ -73,9 +70,20 @@ public class StepDetector {
             public void onAccuracyChanged(Sensor sensor, int i) {
 
             }
-        },sensor,sensorManager.SENSOR_DELAY_FASTEST);
+        };
     }
 
+    public void registerSensor()
+    {
+        startTimer();
+        sensorManager.registerListener(sensorEventListener,sensor,sensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    public void unregisterSensor()
+    {
+        stopTimer();
+        sensorManager.unregisterListener(sensorEventListener,sensor);
+    }
 
     private int checkSensors()
     {
@@ -96,19 +104,20 @@ public class StepDetector {
         this.numSteps = numSteps;
     }
 
-    private void startTimer()
+    public void startTimer()
     {
         timer= new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                //distance in Kilometers
-                distance = (numSteps * stepLength) / 1000;
-                //duration in seconds
-                duration++;
-                updateViews();
-
-
+                if(!pause)
+                {
+                    //distance in CMs
+                    distance = (numSteps * stepLength);
+                    //duration in seconds
+                    duration++;
+                    updateViews();
+                }
 
             }
         },0,1000);
@@ -116,7 +125,87 @@ public class StepDetector {
 
     }
 
+    private void stopTimer()
+    {
+        timer.cancel();
+    }
+
+    public void pauseTimer()
+    {
+        pause = true;
+    }
+
+    public void resumeTimer()
+    {
+        pause = false;
+    }
+
     private void updateViews()
+    {
+        updateNumSteps();
+        updateDistance();
+        updateDuration();
+        updateSpeed();
+
+    }
+
+    private void updateDistance()
+    {
+        final float km, m;
+        m = distance/100;
+        km = m/1000;
+
+        distanceProgress.post(new Runnable() {
+            @Override
+            public void run() {
+                if(m < 1000) {
+                    distanceProgress.setMax(1000);
+                    distanceProgress.setProgress((int) m);
+                    distanceProgress.setSuffixText(" M");
+                }
+                else
+                {
+                    distanceProgress.setMax(100);
+                    distanceProgress.setProgress((int)km);
+                    distanceProgress.setSuffixText(" KM");
+                }
+            }
+        });
+    }
+
+    private void updateCalories()
+    {
+
+    }
+
+    private void updateSpeed()
+    {
+        final float minute, meter, km , hour;
+        meter = distance/100;
+        km = meter / 1000;
+        minute = duration/60;
+        hour = minute/60;
+
+        speedProgress.post(new Runnable() {
+            @Override
+            public void run() {
+                if(meter > 100)
+                {
+                    int pace = (int)(meter/minute); //pace in meter/minute
+                    speedProgress.setSuffixText(" M/Min.");
+                    speedProgress.setProgress(pace);
+                }
+                else if(km > 1)
+                {
+                    int pace = (int)(km/hour); //pace in km/hour
+                    speedProgress.setSuffixText(" KM/H");
+                    speedProgress.setProgress(pace);
+                }
+            }
+        });
+    }
+
+    private void updateNumSteps()
     {
         stepProgress.post(new Runnable() {
             @Override
@@ -128,7 +217,6 @@ public class StepDetector {
                 }
                 else if(numSteps >= 1000000)
                 {
-
                     stepProgress.setSuffixText(" M");
                     stepProgress.setProgress(numSteps/1000000);
                 }
@@ -137,21 +225,21 @@ public class StepDetector {
                 }
             }
         });
+    }
 
-        distanceProgress.post(new Runnable() {
-            @Override
-            public void run() {
-                distanceProgress.setProgress((int)distance);
-            }
-        });
+    private void updateDuration()
+    {
+        final int h, m;
+        m = duration/60;
+        h = m/60;
 
         txtDuration.post(new Runnable() {
             @Override
             public void run() {
-                if(duration%60 > 1)
-                    txtDuration.setText(duration/60+"");
-                if (duration % 120 > 1)
-                    txtDuration.setText(duration/120+"");
+                if(m<10)
+                    txtDuration.setText(h + ":0" + m + "," + duration%60);
+                else
+                    txtDuration.setText(h + ":" + m + "," + duration%60);
             }
         });
 

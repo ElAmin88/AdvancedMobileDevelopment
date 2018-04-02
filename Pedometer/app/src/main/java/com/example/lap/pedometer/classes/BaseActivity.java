@@ -50,7 +50,9 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         drawerMenu = navigation_view.getMenu();
         for(int i = 0; i < drawerMenu.size(); i++) {
             drawerMenu.getItem(i).setOnMenuItemClickListener(this);
+
         }
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -96,8 +98,7 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        if (currentUser.getWeight()!=0 && currentUser.getHeight() !=0 && currentUser.getStepLegth() !=0)
-        {
+
             switch (menuItem.getItemId()) {
                 case R.id.nav_newrun:
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -118,13 +119,12 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                     startActivity(new Intent(getBaseContext(), MainActivity.class));
                     finish();
                     break;
+                case R.id.nav_exit:
+                    finish();
+                    break;
             }
             DrawerLayout.closeDrawer(GravityCompat.START);
-        }
 
-        else {
-            Toast.makeText(getApplicationContext(),"Please Enter your Information",Toast.LENGTH_LONG).show();
-        }
 
         return false;
     }
