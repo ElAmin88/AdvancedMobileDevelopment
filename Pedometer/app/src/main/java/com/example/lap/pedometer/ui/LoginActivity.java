@@ -3,6 +3,7 @@ package com.example.lap.pedometer.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView link_signup;
     DatabaseAdapter databaseAdapter;
     private int failedAttempts; //Number of failed login attempts
+    private SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,18 +39,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         databaseAdapter.close();
-        finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        databaseAdapter.close();
-        finish();
-    }
 
     private void initComponents()
     {
+        editor = getSharedPreferences(SplashActivity.MY_PREFS_NAME, MODE_PRIVATE).edit();
+
         input_LoginName = (EditText)findViewById(R.id.input_LoginName);
         input_LoginPassword = (EditText)findViewById(R.id.input_LoginPassword);
         btn_login = (Button)findViewById(R.id.btn_login);
@@ -105,6 +102,9 @@ public class LoginActivity extends AppCompatActivity {
                         if(user != null && user.getPassword().equals(password))
                         {
                             SplashActivity.setCurrentUser(user);
+                            editor.putBoolean("loggedin", true);
+                            editor.putString("name", user.getName());
+                            editor.apply();
                             onLoginSuccess();
                         }
                         else
@@ -139,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void onLoginSuccess()
     {
+
         Intent i = new Intent(this, ProfileActivity.class);
         startActivity(i);
         finish();

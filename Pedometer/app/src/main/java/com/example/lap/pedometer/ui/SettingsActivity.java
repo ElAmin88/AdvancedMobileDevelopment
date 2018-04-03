@@ -68,12 +68,6 @@ public class SettingsActivity extends BaseActivity {
         databaseAdapter.close();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        databaseAdapter.close();
-        finish();
-    }
 
     private void setClickListeners()
     {
@@ -131,7 +125,7 @@ public class SettingsActivity extends BaseActivity {
     {
         if (validate(true))
         {
-            weight = Float.parseFloat(input_Height.getText().toString());
+            weight = Float.parseFloat(input_Weight.getText().toString());
             height = Float.parseFloat(input_Height.getText().toString());
             stepLength = Float.parseFloat(input_StepLength.getText().toString());
 

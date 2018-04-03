@@ -20,4 +20,7 @@
     <string name="totalCalories">Calories burned : </string>
     <string name="choosePicture">Choose Picture</string>
     <string name="defaultPicture">Default</string>
+    <string name="history">History</string>
+    <string name="appVersion">Version : V 1.0</string>
+    <string name="contact">Contact: a.elamin95@gmail.com</string>
 </resources>

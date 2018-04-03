@@ -1,27 +1,25 @@
 package com.example.lap.pedometer.ui;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.lap.pedometer.R;
 import com.example.lap.pedometer.classes.BaseActivity;
+import com.example.lap.pedometer.classes.DatabaseAdapter;
+import com.example.lap.pedometer.classes.MyBroadcastReciever;
+import com.example.lap.pedometer.classes.PedometerService;
+import com.example.lap.pedometer.classes.RunRecord;
 import com.example.lap.pedometer.classes.StepDetector;
 import com.github.lzyzsd.circleprogress.ArcProgress;
-import com.github.lzyzsd.circleprogress.DonutProgress;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,7 +29,13 @@ public class MainActivity extends BaseActivity {
     private StepDetector stepDetector;
     private TextView txtDuration;
     private ImageButton btn_start, btn_stop;
-    private int numSteps = 0;
+    private float calories, distance, speed, stepLength;
+    private int numSteps, stepsinMin, duration;
+    private Timer timer;
+    public static boolean fromService = false, running = false;
+    private Intent service;
+    private MyBroadcastReciever br;
+    private DatabaseAdapter databaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +43,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         initComponents();
         setClickListeners();
-
-
 
     }
 
@@ -66,7 +68,23 @@ public class MainActivity extends BaseActivity {
         btn_stop = (ImageButton)findViewById(R.id.btn_stop);
 
         txtDuration = (TextView)findViewById(R.id.txtDuration);
-        stepDetector = new StepDetector(this, stepsProgress, caloriesProgress, distanceProgress, speedProgress, txtDuration);
+        stepDetector = new StepDetector(this);
+
+        databaseAdapter = new DatabaseAdapter(this);
+        databaseAdapter.open();
+
+        duration = 0;
+        numSteps = 0;
+        stepLength = SplashActivity.getCurrentUser().getStepLegth();
+        distance = 0;
+        speed = 0;
+        stepsinMin = 0;
+
+        br = new MyBroadcastReciever();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("Service");
+        registerReceiver(br,intentFilter);
 
 
     }
@@ -76,6 +94,7 @@ public class MainActivity extends BaseActivity {
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startTimer();
                 stepDetector.registerSensor();
             }
         });
@@ -84,10 +103,221 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 stepDetector.unregisterSensor();
+                stopTimer();
+                saveRecord();
+                startActivity(new Intent(getApplicationContext(), HistoryActivity.class));
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(fromService)
+        {
+
+            stopService(service);
+            fromService = false;
+            /*BroadcastReceiver br = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    numSteps = intent.getIntExtra("numSteps", 0);
+                    stepDetector = new StepDetector(getApplicationContext());
+                    stepDetector.setNumSteps(numSteps);
+                    duration = intent.getIntExtra("duration",0);
+                    stepDetector.registerSensor();
+                    startTimer();
+                }
+            };*/
+
+
+            numSteps = br.getNumSteps();
+            duration = br.getDuration();
+            stepDetector = new StepDetector(getApplicationContext());
+            stepDetector.setNumSteps(numSteps);
+            stepDetector.registerSensor();
+            startTimer();
+        }
+
+
+    }
+
+
+    @Override
+    protected void onStop() {
+        if (running)
+        {
+            service = new Intent(this, PedometerService.class);
+            stepDetector.unregisterSensor();
+            service.putExtra("numSteps", numSteps);
+            service.putExtra("duration", duration);
+            startService( service );
+            stopTimer();
+        }
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        databaseAdapter.close();
+    }
+
+    public void startTimer()
+    {
+        running = true;
+        timer= new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                //distance in CMs
+                numSteps = stepDetector.getNumSteps();
+                distance = (numSteps * stepLength);
+                //duration in seconds
+                duration++;
+                updateViews();
+
+
+            }
+        },0,1000);
+
+
+    }
+
+    public void stopTimer()
+    {
+        running = false;
+        timer.cancel();
+    }
+
+
+    private void updateViews()
+    {
+        updateNumSteps();
+        updateDistance();
+        updateDuration();
+        updateSpeed();
+        updateCalories();
+
+    }
+
+    private void updateDistance()
+    {
+        final float km, m;
+        m = distance/100;
+        km = m/1000;
+
+        distanceProgress.post(new Runnable() {
+            @Override
+            public void run() {
+                if(m < 1000) {
+                    distanceProgress.setMax(1000);
+                    distanceProgress.setProgress((int) m);
+                    distanceProgress.setSuffixText(" M");
+                }
+                else
+                {
+                    distanceProgress.setMax(100);
+                    distanceProgress.setProgress((int)km);
+                    distanceProgress.setSuffixText(" KM");
+                }
+            }
+        });
+    }
+
+    private void updateCalories()
+    {
+        if(speed > 1)
+            calories+= 0.0005 * SplashActivity.getCurrentUser().getWeight() * speed + 0.0035;
+        else
+            calories+= 0.0005 * SplashActivity.getCurrentUser().getWeight() * 20 + 0.0035;
+
+        caloriesProgress.post(new Runnable() {
+            @Override
+            public void run() {
+                caloriesProgress.setProgress((int)calories);
+            }
+        });
+    }
+
+    private void updateSpeed()
+    {
+        if(duration % 60 == 0)
+        {
+
+            final float pace = stepsinMin * stepLength;
+            speed = pace / 100;
+            speedProgress.post(new Runnable() {
+                @Override
+                public void run() {
+                   speedProgress.setProgress((int)speed);
+                }
+            });
+            stepsinMin = 0;
+        }
+
+    }
+
+    private void updateNumSteps()
+    {
+        stepsProgress.post(new Runnable() {
+            @Override
+            public void run() {
+                if(numSteps >= 1000)
+                {
+                    stepsProgress.setSuffixText(" K");
+                    stepsProgress.setProgress(numSteps/1000);
+                }
+                else if(numSteps >= 1000000)
+                {
+                    stepsProgress.setSuffixText(" M");
+                    stepsProgress.setProgress(numSteps/1000000);
+                }
+                else {
+                    stepsProgress.setProgress(numSteps);
+                }
+            }
+        });
+    }
+
+    private void updateDuration()
+    {
+        final int h, m;
+        m = duration/60;
+        h = m/60;
+
+        txtDuration.post(new Runnable() {
+            @Override
+            public void run() {
+                if(m<10)
+                    txtDuration.setText(h + ":0" + m + "," + duration%60);
+                else
+                    txtDuration.setText(h + ":" + m + "," + duration%60);
             }
         });
 
     }
 
+    private void saveRecord()
+    {
+        RunRecord record = new RunRecord();
+        record.setUserId(SplashActivity.getCurrentUser().getId());
+        record.setSpeed(speed);
+        record.setNumSteps(numSteps);
+        record.setNumCalories(calories);
+        record.setDuration(duration);
+        record.setDistance(distance);
+        Date c = Calendar.getInstance().getTime();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String time = df.format(c);
+        record.setTime(time);
+
+        databaseAdapter.AddRunRecord(record);
+
+    }
 
 }

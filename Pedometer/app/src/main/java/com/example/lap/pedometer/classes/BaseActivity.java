@@ -1,6 +1,7 @@
 package com.example.lap.pedometer.classes;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -18,7 +19,9 @@ import android.widget.Toast;
 
 import com.example.lap.pedometer.R;
 import com.example.lap.pedometer.ui.HistoryActivity;
+import com.example.lap.pedometer.ui.LoginActivity;
 import com.example.lap.pedometer.ui.MainActivity;
+import com.example.lap.pedometer.ui.ProfileActivity;
 import com.example.lap.pedometer.ui.SettingsActivity;
 import com.example.lap.pedometer.ui.SplashActivity;
 
@@ -33,12 +36,14 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     private DrawerLayout DrawerLayout;
     private ActionBarDrawerToggle DrawerToggle;
     private Menu drawerMenu;
-    private User currentUser;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_base);
+
+        editor = getSharedPreferences(SplashActivity.MY_PREFS_NAME, MODE_PRIVATE).edit();
         main_layout = (FrameLayout) findViewById(R.id.view_stub);
         navigation_view = (NavigationView) findViewById(R.id.navigation_view);
         DrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -46,7 +51,6 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         DrawerLayout.addDrawerListener(DrawerToggle);
         DrawerToggle.syncState();
 
-        currentUser = SplashActivity.getCurrentUser();
         drawerMenu = navigation_view.getMenu();
         for(int i = 0; i < drawerMenu.size(); i++) {
             drawerMenu.getItem(i).setOnMenuItemClickListener(this);
@@ -98,7 +102,7 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-
+        if(!MainActivity.running) {
             switch (menuItem.getItemId()) {
                 case R.id.nav_newrun:
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -113,19 +117,35 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                     finish();
                     break;
                 case R.id.nav_logout:
-                    // handle it
+                    SplashActivity.setCurrentUser(null);
+                    editor.putBoolean("loggedin", false);
+                    editor.putString("name", null);
+                    editor.apply();
+                    startActivity(new Intent(getBaseContext(), LoginActivity.class));
+                    finish();
                     break;
                 case R.id.nav_profile:
-                    startActivity(new Intent(getBaseContext(), MainActivity.class));
+                    startActivity(new Intent(getBaseContext(), ProfileActivity.class));
                     finish();
                     break;
                 case R.id.nav_exit:
                     finish();
                     break;
+                case R.id.nav_help:
+                    HelpDialog helpDialog = new HelpDialog(getApplicationContext());
+                    helpDialog.show();
+                    break;
             }
-            DrawerLayout.closeDrawer(GravityCompat.START);
-
+        }
+        else
+            Toast.makeText(getApplicationContext(),"Stop Timer First",Toast.LENGTH_LONG).show();
+        DrawerLayout.closeDrawer(GravityCompat.START);
 
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

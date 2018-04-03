@@ -264,8 +264,8 @@ public class DatabaseAdapter {
 
         ContentValues values = new ContentValues();
         values.put(KEY_USER_WEIGHT, weight);
-        values.put(KEY_USER_HEIGHT, currentUser.getWeight());
-        values.put(KEY_USER_STEP_LENGTH, currentUser.getStepLegth());
+        values.put(KEY_USER_HEIGHT, height);
+        values.put(KEY_USER_STEP_LENGTH, stepLength);
         if (picture == null)
             values.put(KEY_USER_PICTURE, setDefaultPicture());
         else
@@ -312,7 +312,7 @@ public class DatabaseAdapter {
 
 
         // Insert it into the database.
-        return db.insert(TABLE_USERS, null, initialValues);
+        return db.insert(TABLE_RUNRECORDS, null, initialValues);
     }
 
     //Deleting RunRecord by Id

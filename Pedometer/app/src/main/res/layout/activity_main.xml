@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.lap.pedometer.ui.MainActivity">
+    tools:context="com.example.lap.pedometer.ui.MainActivity"
+    android:background="@color/colorAccent">
 
     <LinearLayout
         android:id="@+id/row1"
@@ -21,7 +22,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             custom:arc_bottom_text="Steps"
-            custom:arc_bottom_text_size="18sp"
+            custom:arc_bottom_text_size="14sp"
+            custom:arc_text_color="#FFFF"
+            custom:arc_unfinished_color="#FFFF"
+            custom:arc_finished_color="@color/colorPrimaryDark"
             custom:circle_progress="0" />
 
         <TextView
@@ -35,13 +39,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-
             custom:arc_bottom_text="@string/calories"
-            custom:arc_finished_color="@color/red"
+            custom:arc_bottom_text_size="14sp"
+            custom:arc_text_color="#FFFF"
+            custom:arc_unfinished_color="#FFFF"
+            custom:arc_finished_color="@color/colorPrimaryDark"
             custom:arc_max="1000"
             custom:arc_progress="0"
-            custom:arc_bottom_text_size="18sp"
-            custom:arc_unfinished_color="@color/colorAccent" />
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +68,7 @@
             android:includeFontPadding="false"
             android:singleLine="true"
             android:text="0:00,00"
-            android:textColor="@color/colorAccent"
+            android:textColor="#FFFF"
             android:textSize="80sp"  />
 
     </LinearLayout>
@@ -83,7 +88,10 @@
             android:layout_weight="1"
             custom:arc_bottom_text="@string/distance"
             custom:circle_progress="0"
-            custom:arc_bottom_text_size="18sp"
+            custom:arc_bottom_text_size="14sp"
+            custom:arc_text_color="#FFFF"
+            custom:arc_unfinished_color="#FFFF"
+            custom:arc_finished_color="@color/colorPrimaryDark"
             />
 
         <TextView
@@ -98,11 +106,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             custom:arc_bottom_text="@string/speed"
-            custom:arc_finished_color="@color/red"
             custom:arc_max="1000"
             custom:arc_progress="0"
-            custom:arc_unfinished_color="@color/colorAccent"
-            custom:arc_bottom_text_size="18sp"/>
+            custom:arc_bottom_text_size="14sp"
+            custom:arc_text_color="#FFFF"
+            custom:arc_unfinished_color="#FFFF"
+            custom:arc_finished_color="@color/colorPrimaryDark"
+            />
     </LinearLayout>
 
     <LinearLayout

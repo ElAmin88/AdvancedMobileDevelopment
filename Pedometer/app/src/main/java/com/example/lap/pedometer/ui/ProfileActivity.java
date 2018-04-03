@@ -51,7 +51,12 @@ public class ProfileActivity extends BaseActivity {
         lbl_calories.setText(calories+"");
 
         img_profilePicture = (ImageView)findViewById(R.id.img_profilePicture);
-        Bitmap img = BitmapFactory.decodeByteArray(currentUser.getPicture(),0,currentUser.getPicture().length);
+        Bitmap img;
+        byte[] emptyArray = new byte[0];
+        if(currentUser.getPicture() != null)
+            img = BitmapFactory.decodeByteArray(currentUser.getPicture(),0,currentUser.getPicture().length);
+        else
+            img = BitmapFactory.decodeByteArray(emptyArray,0,0);
         img_profilePicture.setImageBitmap(img);
 
 
@@ -72,16 +77,11 @@ public class ProfileActivity extends BaseActivity {
 
     }
 
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         databaseAdapter.close();
     }
 
-    @Override
-    public void onBackPressed() {
 
-    }
 }

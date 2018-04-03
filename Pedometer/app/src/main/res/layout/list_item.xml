@@ -1,8 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="15dp"
-    android:orientation="vertical">
+    android:background="@drawable/round_bg"
+    android:padding="10dp">
 
+    <TextView
+        android:id="@+id/lbl_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0.15"
+        android:text="TextView"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.425"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lbl_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/background_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/lbl_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/background_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/lbl_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/background_light"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.425"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lbl_speed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/background_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/lbl_calories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/background_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/lbl_numSteps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/background_light"
+            android:textSize="14sp" />
+    </LinearLayout>
 </LinearLayout>

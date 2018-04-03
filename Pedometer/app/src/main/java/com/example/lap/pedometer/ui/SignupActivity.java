@@ -99,7 +99,7 @@ public class SignupActivity extends AppCompatActivity {
                         if(user != null)
                         {
                             long i = databaseAdapter.AddUser(user);
-                            if(i == 1)
+                            if(i > 0)
                             {
                                 SplashActivity.setCurrentUser(user);
                                 onSignupSuccess();

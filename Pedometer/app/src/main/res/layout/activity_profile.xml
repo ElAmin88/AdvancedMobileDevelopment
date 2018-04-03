@@ -4,26 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     android:orientation="vertical"
     android:padding="20dp"
     tools:context="com.example.lap.pedometer.ui.ProfileActivity">
 
 
-    <ImageView
-        android:id="@+id/img_profilePicture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"
-        app:srcCompat="@drawable/app_icon" />
+    <LinearLayout
+        android:id="@+id/row0"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img_profilePicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="0dp"
+            app:srcCompat="@drawable/app_icon" />
+    </LinearLayout>
 
 
     <LinearLayout
         android:id="@+id/row_weight"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
+        android:layout_weight="0.15"
+        android:background="@drawable/round_bg"
         android:padding="10dp">
 
         <LinearLayout
@@ -60,8 +70,9 @@
     <LinearLayout
         android:id="@+id/row_height"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
+        android:layout_weight="0.15"
         android:background="@drawable/round_bg"
         android:padding="10dp">
 
@@ -99,8 +110,9 @@
     <LinearLayout
         android:id="@+id/row_totalRuns"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
+        android:layout_weight="0.15"
         android:background="@drawable/round_bg"
         android:padding="10dp">
 
@@ -138,8 +150,9 @@
     <LinearLayout
         android:id="@+id/row_totalCalories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
+        android:layout_weight="0.15"
         android:background="@drawable/round_bg"
         android:padding="10dp">
 
