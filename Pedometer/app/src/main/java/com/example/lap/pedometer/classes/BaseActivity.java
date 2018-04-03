@@ -132,7 +132,7 @@ public class BaseActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                     finish();
                     break;
                 case R.id.nav_help:
-                    HelpDialog helpDialog = new HelpDialog(getApplicationContext());
+                    HelpDialog helpDialog = new HelpDialog(BaseActivity.this);
                     helpDialog.show();
                     break;
             }

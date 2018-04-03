@@ -33,6 +33,7 @@ public class PedometerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (MainActivity.running) {
             MainActivity.fromService = true;
+            MainActivity.waitingResults = true;
             Log.d("Service","service running");
             stepDetector = new StepDetector(this);
             numSteps = intent.getIntExtra("numSteps",-1);
@@ -67,7 +68,7 @@ public class PedometerService extends Service {
             i.putExtra("numSteps", stepDetector.getNumSteps());
             i.putExtra("duration", duration);
             sendBroadcast(i);
-            MainActivity.fromService = true;
+            MainActivity.waitingResults = false;
         }
         super.onDestroy();
 

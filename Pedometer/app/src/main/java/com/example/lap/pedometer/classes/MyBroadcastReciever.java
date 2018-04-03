@@ -10,11 +10,12 @@ import android.content.Intent;
 
 public class MyBroadcastReciever extends BroadcastReceiver {
     private int numSteps = 0, duration = 0;
+    public boolean recieved = false;
     @Override
     public void onReceive(Context context, Intent intent) {
         numSteps = intent.getIntExtra("numSteps", 0);
-        //stepDetector = new StepDetector(context);
         duration = intent.getIntExtra("duration",0);
+        recieved = true;
     }
 
     public int getDuration() {

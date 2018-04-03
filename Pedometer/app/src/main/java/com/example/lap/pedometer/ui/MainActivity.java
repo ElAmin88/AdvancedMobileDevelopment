@@ -1,5 +1,6 @@
 package com.example.lap.pedometer.ui;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +33,7 @@ public class MainActivity extends BaseActivity {
     private float calories, distance, speed, stepLength;
     private int numSteps, stepsinMin, duration;
     private Timer timer;
-    public static boolean fromService = false, running = false;
+    public static boolean fromService = false, running = false, waitingResults = false;
     private Intent service;
     private MyBroadcastReciever br;
     private DatabaseAdapter databaseAdapter;
@@ -81,11 +82,9 @@ public class MainActivity extends BaseActivity {
         stepsinMin = 0;
 
         br = new MyBroadcastReciever();
-
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("Service");
         registerReceiver(br,intentFilter);
-
 
     }
 
@@ -94,19 +93,26 @@ public class MainActivity extends BaseActivity {
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startTimer();
-                stepDetector.registerSensor();
+                if(!running)
+                {
+                    startTimer();
+                    stepDetector.registerSensor();
+                }
             }
         });
 
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stepDetector.unregisterSensor();
-                stopTimer();
-                saveRecord();
-                startActivity(new Intent(getApplicationContext(), HistoryActivity.class));
-                finish();
+                if(running)
+                {
+                    stepDetector.unregisterSensor();
+                    stopTimer();
+                    saveRecord();
+                    startActivity(new Intent(getApplicationContext(), HistoryActivity.class));
+                    finish();
+                }
+
             }
         });
     }
@@ -116,26 +122,10 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         if(fromService)
         {
-
             stopService(service);
-            fromService = false;
-            /*BroadcastReceiver br = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    numSteps = intent.getIntExtra("numSteps", 0);
-                    stepDetector = new StepDetector(getApplicationContext());
-                    stepDetector.setNumSteps(numSteps);
-                    duration = intent.getIntExtra("duration",0);
-                    stepDetector.registerSensor();
-                    startTimer();
-                }
-            };*/
 
 
-            numSteps = br.getNumSteps();
-            duration = br.getDuration();
             stepDetector = new StepDetector(getApplicationContext());
-            stepDetector.setNumSteps(numSteps);
             stepDetector.registerSensor();
             startTimer();
         }
@@ -148,12 +138,13 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         if (running)
         {
+            stopTimer();
+            running = true;
             service = new Intent(this, PedometerService.class);
             stepDetector.unregisterSensor();
             service.putExtra("numSteps", numSteps);
             service.putExtra("duration", duration);
             startService( service );
-            stopTimer();
         }
         super.onStop();
 
@@ -172,7 +163,13 @@ public class MainActivity extends BaseActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-
+                if (br.recieved)
+                {
+                    numSteps = br.getNumSteps();
+                    duration = br.getDuration();
+                    stepDetector.setNumSteps(numSteps);
+                    br.recieved = false;
+                }
                 //distance in CMs
                 numSteps = stepDetector.getNumSteps();
                 distance = (numSteps * stepLength);
@@ -303,20 +300,32 @@ public class MainActivity extends BaseActivity {
 
     private void saveRecord()
     {
-        RunRecord record = new RunRecord();
-        record.setUserId(SplashActivity.getCurrentUser().getId());
-        record.setSpeed(speed);
-        record.setNumSteps(numSteps);
-        record.setNumCalories(calories);
-        record.setDuration(duration);
-        record.setDistance(distance);
-        Date c = Calendar.getInstance().getTime();
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
+                R.style.Theme_AppCompat_DayNight_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Creating Record...");
+        progressDialog.show();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-        String time = df.format(c);
-        record.setTime(time);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        RunRecord record = new RunRecord();
+                        record.setUserId(SplashActivity.getCurrentUser().getId());
+                        record.setSpeed(speed);
+                        record.setNumSteps(numSteps);
+                        record.setNumCalories(calories);
+                        record.setDuration(duration);
+                        record.setDistance(distance);
+                        Date c = Calendar.getInstance().getTime();
 
-        databaseAdapter.AddRunRecord(record);
+                        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                        String time = df.format(c);
+                        record.setTime(time);
+
+                        databaseAdapter.AddRunRecord(record);
+                    }
+                }, 2000);
+
 
     }
 

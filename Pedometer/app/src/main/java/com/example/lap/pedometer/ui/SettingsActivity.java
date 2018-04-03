@@ -1,5 +1,6 @@
 package com.example.lap.pedometer.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,10 +20,14 @@ import android.widget.TextView;
 import com.example.lap.pedometer.R;
 import com.example.lap.pedometer.classes.BaseActivity;
 import com.example.lap.pedometer.classes.DatabaseAdapter;
+import com.example.lap.pedometer.classes.RunRecord;
 import com.example.lap.pedometer.classes.User;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class SettingsActivity extends BaseActivity {
@@ -125,19 +130,31 @@ public class SettingsActivity extends BaseActivity {
     {
         if (validate(true))
         {
-            weight = Float.parseFloat(input_Weight.getText().toString());
-            height = Float.parseFloat(input_Height.getText().toString());
-            stepLength = Float.parseFloat(input_StepLength.getText().toString());
+            final ProgressDialog progressDialog = new ProgressDialog(SettingsActivity.this,
+                    R.style.Theme_AppCompat_DayNight_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Saving Settings...");
+            progressDialog.show();
 
-            currentUser.setWeight(weight);
-            currentUser.setStepLegth(stepLength);
-            currentUser.setHeight(height);
-            int b = databaseAdapter.updateUserInformation(currentUser, weight, height, stepLength, currentUser.getPicture());
-            if(b ==1)
-                SplashActivity.setCurrentUser(currentUser);
-            Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
-            startActivity(i);
-            finish();
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            weight = Float.parseFloat(input_Weight.getText().toString());
+                            height = Float.parseFloat(input_Height.getText().toString());
+                            stepLength = Float.parseFloat(input_StepLength.getText().toString());
+
+                            currentUser.setWeight(weight);
+                            currentUser.setStepLegth(stepLength);
+                            currentUser.setHeight(height);
+                            int b = databaseAdapter.updateUserInformation(currentUser, weight, height, stepLength, currentUser.getPicture());
+                            if(b ==1)
+                                SplashActivity.setCurrentUser(currentUser);
+                            Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    }, 2000);
+
         }
     }
 
