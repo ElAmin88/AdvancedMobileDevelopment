@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Treasure Hunter</string>
+    <string name="title_activity_maps">TresureHunter</string>
+    <string name="score">Score: </string>
+    <string name="time">Time: </string>
+    <string name="nearest">Nearest Location: </string>
+    <string name="startGame">Start Game</string>
+    <string name="setting">Settings</string>
+</resources>

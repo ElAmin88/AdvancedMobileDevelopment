@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Database</string>
-    <string name="Add">Add Records</string>
-    <string name="Display">Display Records</string>
-    <string name="Username">Username</string>
-    <string name="Score">Score</string>
-    <string name="Date">Date</string>
-
-</resources>

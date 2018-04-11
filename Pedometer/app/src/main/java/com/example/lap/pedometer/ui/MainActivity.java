@@ -306,23 +306,24 @@ public class MainActivity extends BaseActivity {
         progressDialog.setMessage("Creating Record...");
         progressDialog.show();
 
+        RunRecord record = new RunRecord();
+        record.setUserId(SplashActivity.getCurrentUser().getId());
+        record.setSpeed(speed);
+        record.setNumSteps(numSteps);
+        record.setNumCalories(calories);
+        record.setDuration(duration);
+        record.setDistance(distance);
+        Date c = Calendar.getInstance().getTime();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String time = df.format(c);
+        record.setTime(time);
+
+        databaseAdapter.AddRunRecord(record);
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        RunRecord record = new RunRecord();
-                        record.setUserId(SplashActivity.getCurrentUser().getId());
-                        record.setSpeed(speed);
-                        record.setNumSteps(numSteps);
-                        record.setNumCalories(calories);
-                        record.setDuration(duration);
-                        record.setDistance(distance);
-                        Date c = Calendar.getInstance().getTime();
 
-                        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-                        String time = df.format(c);
-                        record.setTime(time);
-
-                        databaseAdapter.AddRunRecord(record);
                     }
                 }, 2000);
 
